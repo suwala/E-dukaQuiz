@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">E-dukaわっさクイズ</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">E-dukaわっさクイズ</string>
+    <string name="title">E-dukaわっさクイズ</string>
+    <string name="touch">Touch On Start</string>
+    <string name="genre">MenuSelect</string>
+    <string name="a_count"></string>
+    <string name="return1">タイトルへ戻る</string>
+
+</resources>
