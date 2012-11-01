@@ -30,7 +30,9 @@ public class Question extends Activity{
 
     static Integer a_c,miss,point; //正解数のカウント
     public String mondai;
-    public Bitmap mosaic;
+    //public Bitmap mosaic;
+    public Bitmap image;
+    public int dot;
 
     private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
@@ -85,8 +87,13 @@ public class Question extends Activity{
 				length = mondai.length();
 			tv.setText(mondai.subSequence(0, length));
 			
-			ImageView iv = (ImageView)findViewById(R.id.quetions2);
-			iv.setImageBitmap(mosaic);
+			if(dot < 0){
+				ImageView iv = (ImageView)findViewById(R.id.quetions2);
+				Bitmap mosaic = mosaic_image(image,dot);
+				dot = dot-3;
+				iv.setImageBitmap(mosaic);
+			}
+			
 
 			ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar1);
 			pb.setProgress((int)(System.currentTimeMillis()-start));
@@ -99,6 +106,44 @@ public class Question extends Activity{
             timerHandler.removeCallbacks(CallbackTimer);
         }
     };
+    
+    public Bitmap mosaic_image(Bitmap image, int dot){
+    	
+
+		Bitmap b = image.copy(Bitmap.Config.ARGB_8888, true);
+
+		//int dot = 8;
+		// �s�N�Z���f�[�^�����[�v
+		for (int i = 0; i < b.getWidth() / dot; i++) {
+			for (int j = 0; j < b.getHeight() / dot; j++) {
+				int color = image.getPixel(i, j);
+
+				// �h�b�g�̒��̕��ϒl���g��
+				int rr = 0;
+				int gg = 0;
+				int bb = 0;
+				for (int k = 0; k < dot; k++) {
+					for (int l = 0; l < dot; l++) {
+						int dotColor = image.getPixel(i * dot + k, j * dot + l);
+						rr += Color.red(dotColor);
+						gg += Color.green(dotColor);
+						bb += Color.blue(dotColor);
+					}
+				}
+				rr = rr / (dot * dot);
+				gg = gg / (dot * dot);
+				bb = bb / (dot * dot);
+
+				for (int k = 0; k < dot; k++) {
+					for (int l = 0; l < dot; l++) {
+						b.setPixel(i * dot + k, j * dot + l, Color.rgb(rr, gg, bb));
+					}
+				}
+			}
+		}
+
+		return b;
+    }
 
 
 	//order[現在の問題数]に基づいて問題を取得　答えのみanswerに格納
@@ -119,59 +164,17 @@ public class Question extends Activity{
 			 Log.d("question",String.valueOf(this.q_Index));
 			 boolean isEof = c.moveToFirst();
 			 if(isEof){
+				 //preppy
+				 Resources r = getResources();
+				 this.image = BitmapFactory.decodeResource(r, R.drawable.sample1);
+				 this.dot = 15;
+				 //preppy
 				 //問題の取得
 				 clmIndex = c.getColumnIndex("question");
 				 c.move(this.order[this.q_Index]);
 				 Log.d("question",String.valueOf(this.order[this.q_Index]));
 
 				 TextView tv = (TextView)findViewById(R.id.quetions);
-				 //ImageView tv = (ImageView)findViewById(R.id.quetions);
-
-				 //改造ここから
-
-				 Resources r = getResources();
-					Bitmap bmp1 = BitmapFactory.decodeResource(r, R.drawable.sample1);
-
-					Bitmap b = bmp1.copy(Bitmap.Config.ARGB_8888, true);
-
-					int dot = 8;
-					// �s�N�Z���f�[�^�����[�v
-					for (int i = 0; i < b.getWidth() / dot; i++) {
-						for (int j = 0; j < b.getHeight() / dot; j++) {
-							int color = bmp1.getPixel(i, j);
-
-							// �h�b�g�̒��̕��ϒl���g��
-							int rr = 0;
-							int gg = 0;
-							int bb = 0;
-							for (int k = 0; k < dot; k++) {
-								for (int l = 0; l < dot; l++) {
-									int dotColor = bmp1.getPixel(i * dot + k, j * dot + l);
-									rr += Color.red(dotColor);
-									gg += Color.green(dotColor);
-									bb += Color.blue(dotColor);
-								}
-							}
-							rr = rr / (dot * dot);
-							gg = gg / (dot * dot);
-							bb = bb / (dot * dot);
-
-							for (int k = 0; k < dot; k++) {
-								for (int l = 0; l < dot; l++) {
-									b.setPixel(i * dot + k, j * dot + l, Color.rgb(rr, gg, bb));
-								}
-							}
-						}
-					}
-
-					this.mosaic = b;
-					//ImageView image1 = (ImageView) findViewById(R.id.textView1);
-
-
-					//image1.setImageBitmap(b);
-					//RelativeLayout tv = (RelativeLayout) findViewById(R.id.view1);
-				 //改造ここまで
-
 
 				 //tv.setText(c.getString(clmIndex));
 				 this.mondai = c.getString(clmIndex);
