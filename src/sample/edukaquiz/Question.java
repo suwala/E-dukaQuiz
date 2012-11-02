@@ -30,10 +30,13 @@ public class Question extends Activity{
 
     static Integer a_c,miss,point; //正解数のカウント
     public String mondai;
-    //public Bitmap mosaic;
+    public Bitmap mosaic;
+    public Bitmap mosaic2;
+    public Bitmap mosaic3;
     public Bitmap image;
     public int dot;
 
+    private int mflg;
     private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
     private long start;
@@ -81,19 +84,29 @@ public class Question extends Activity{
 			timerHandler.postDelayed(this, 10);
 
 			TextView tv = (TextView)findViewById(R.id.quetions);
-			
+
 			int length = (int)(System.currentTimeMillis()-start)/100;
+			//if(dot > 5){
+			ImageView iv = (ImageView)findViewById(R.id.quetions2);
+			//Bitmap mosaic = mosaic_image(image,dot);
+			//dot = dot-3;
+			Log.d(Integer.toString(length),"log");
+			if(length > 35 && length<70 ){
+				iv.setImageBitmap(mosaic2);
+			}else if(length > 70){
+				iv.setImageBitmap(mosaic3);
+			}else{
+				iv.setImageBitmap(mosaic);
+			}
+
+			//}
+
 			if(length > mondai.length())
 				length = mondai.length();
 			tv.setText(mondai.subSequence(0, length));
-			
-			if(dot < 0){
-				ImageView iv = (ImageView)findViewById(R.id.quetions2);
-				Bitmap mosaic = mosaic_image(image,dot);
-				dot = dot-3;
-				iv.setImageBitmap(mosaic);
-			}
-			
+
+
+
 
 			ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar1);
 			pb.setProgress((int)(System.currentTimeMillis()-start));
@@ -106,14 +119,14 @@ public class Question extends Activity{
             timerHandler.removeCallbacks(CallbackTimer);
         }
     };
-    
+
     public Bitmap mosaic_image(Bitmap image, int dot){
-    	
+
 
 		Bitmap b = image.copy(Bitmap.Config.ARGB_8888, true);
 
 		//int dot = 8;
-		// �s�N�Z���f�[�^�����[�v
+
 		for (int i = 0; i < b.getWidth() / dot; i++) {
 			for (int j = 0; j < b.getHeight() / dot; j++) {
 				int color = image.getPixel(i, j);
@@ -157,24 +170,38 @@ public class Question extends Activity{
 			 DBHelper dbh = new DBHelper(this);
 			 SQLiteDatabase db = dbh.getReadableDatabase();
 
-			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"question","answer","dummy1","dummy2","dummy3"}, null,null,null,null,null);
+			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"question","answer","dummy1","dummy2","dummy3","image","mflg"}, null,null,null,null,null);
 			 this.startManagingCursor(c);
 			 int clmIndex;
 
 			 Log.d("question",String.valueOf(this.q_Index));
 			 boolean isEof = c.moveToFirst();
 			 if(isEof){
-				 //preppy
-				 Resources r = getResources();
-				 this.image = BitmapFactory.decodeResource(r, R.drawable.sample1);
-				 this.dot = 15;
-				 //preppy
 				 //問題の取得
-				 clmIndex = c.getColumnIndex("question");
+
 				 c.move(this.order[this.q_Index]);
 				 Log.d("question",String.valueOf(this.order[this.q_Index]));
 
 				 TextView tv = (TextView)findViewById(R.id.quetions);
+
+				 //preppy
+				 this.mosaic = null;
+				 this.mosaic2 = null;
+				 this.mosaic3 = null;
+				 clmIndex = c.getColumnIndex("mflg");
+				 this.mflg = c.getInt(clmIndex);
+				 if(this.mflg==1){
+					 clmIndex = c.getColumnIndex("image");
+					 Resources r = getResources();
+					 //c.getString(clmIndex)
+					 this.image = BitmapFactory.decodeResource(r, R.drawable.sample1);
+					 //this.dot = 15;
+					 this.mosaic = mosaic_image(image,40);
+					 this.mosaic2 = mosaic_image(image,30);
+					 this.mosaic3 = mosaic_image(image,18);
+				 }
+				 //preppy
+				 clmIndex = c.getColumnIndex("question");
 
 				 //tv.setText(c.getString(clmIndex));
 				 this.mondai = c.getString(clmIndex);
