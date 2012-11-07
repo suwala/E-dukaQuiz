@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="sample.edukaquiz"
+    package="sample.edukaquizMoza"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -22,7 +22,7 @@
         </activity>
         <activity android:name="Menu"></activity>
         <activity android:name="Question"></activity>
-        <activity android:name="sample.edukaquiz.Result"></activity>
+        <activity android:name="sample.edukaquizMoza.Result"></activity>
     </application>
 
 </manifest>
