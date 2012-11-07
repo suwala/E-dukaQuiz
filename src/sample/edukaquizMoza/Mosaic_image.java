@@ -4,9 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 public class Mosaic_image{
-	private Bitmap bmp;
 	
-	public Mosaic_image(Bitmap image, int dot){
+	public static Bitmap mosaic_image(Bitmap image, int dot){
 		
 		Bitmap b = image.copy(Bitmap.Config.ARGB_8888, true);
 
@@ -40,11 +39,7 @@ public class Mosaic_image{
 			}
 		}
 
-		this.bmp = b;		
-	}
-	
-	public Bitmap getMosaic(){
-		return this.bmp;
+		return b;		
 	}
 
 }

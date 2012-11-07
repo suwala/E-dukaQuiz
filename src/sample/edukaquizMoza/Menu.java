@@ -23,7 +23,7 @@ public class Menu extends Activity{
     }
 	
 	public void qesS(View view){
-		Intent i = new Intent(this,Question.class);
+		Intent i = new Intent(this,OffLineQuizAcivity.class);
 		this.startActivityForResult(i,0);
 	}
 

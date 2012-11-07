@@ -1,5 +1,8 @@
 package sample.edukaquizMoza;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import sample.edukaquizMoza.R;
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +21,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class Question extends Activity{
+public class OffLineQuizAcivity extends Activity{
 
     
 
 	public boolean q = true;	//画面状態のフラグ　trueだと問題がfalseだと結果が表示されている
-    public Integer questions,q_Index=0;    //DBに登録されている総問題数のカウント　DBのメソッドで解決できる？ q_Index = 現在が難問目かの保持
+    public Integer totalQuestion,q_Index=0;    //DBに登録されている総問題数のカウント　DBのメソッドで解決できる？ q_Index = 現在が難問目かの保持
 
 
     public final Integer syutudai = 3; //出題数
@@ -38,19 +41,29 @@ public class Question extends Activity{
     public Bitmap mosaic3;
     public Bitmap image;
     public int dot;
+    public List<QuizManager> quizType =  new ArrayList<QuizManager>();
 
-    private int mflg;
+    private int qTyep;
     private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
     private long start;
     private final int pbTime = 10000;//ProgressBarの設定タイム
 
+    
+    
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question);
 
 
+        QuizManager four = new FourQuiz(this);
+        QuizManager mosaic = new MosaicQuiz(this);
+        
+        this.quizType.add(four);
+        this.quizType.add(mosaic);
+        
         DBHelper dbh = new DBHelper(this);
         SQLiteDatabase db = dbh.getReadableDatabase();
         String sql = "SELECT COUNT(*) from "+DBHelper.getTableName();
@@ -62,12 +75,12 @@ public class Question extends Activity{
         this.startManagingCursor(cursor);
         //Integer index  = cursor.getColumnIndex("*");
         cursor.moveToFirst();
-        this.questions = cursor.getInt(0);
+        this.totalQuestion = cursor.getInt(0);
 
-        Log.d("oncre",String.valueOf(this.questions));//総問題数の一致確認
+        Log.d("oncre",String.valueOf(this.totalQuestion));//総問題数の一致確認
         dbh.close();
 
-        this.order= new Integer[questions];
+        this.order= new Integer[totalQuestion];
         //出題順の決定
         this.setOrder();
         
@@ -80,6 +93,8 @@ public class Question extends Activity{
         pb.setMax(this.pbTime);
 
         a_c = miss = point = 0;
+        
+        
     }
 
 	private Runnable CallbackTimer = new Runnable() {
@@ -88,12 +103,12 @@ public class Question extends Activity{
 			// TODO 自動生成されたメソッド・スタブ
 			timerHandler.postDelayed(this, 10);
 
-			TextView tv = (TextView)findViewById(R.id.quetions);
+			TextView tv = (TextView)findViewById(R.id.quetion);
 
 			//0.1秒につき一文字表示
 			int length = (int)(System.currentTimeMillis()-start)/100;
 			
-			if(mflg == 1){
+			if(qTyep == 1){
 				
 				
 				
@@ -108,13 +123,14 @@ public class Question extends Activity{
 				}*/
 				
 				if(length % 10 == 1){
-					ImageView iv = (ImageView)findViewById(R.id.quetions2);
+					ImageView iv = (ImageView)findViewById(R.id.mosaic);
 					Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample1);
 					bmp = Bitmap.createScaledBitmap(bmp, 160, 200, true);
 				
 					int dot = (100-length)/2;
-					if(dot != 0)
-						bmp = mosaic_image(bmp, (100-length)/2);
+					if(dot != 0){
+						bmp = Mosaic_image.mosaic_image(bmp, (100-length)/2);//mosaic_image(bmp, (100-length)/2);
+					}
 				
 					iv.setImageBitmap(bmp);
 				}
@@ -209,79 +225,26 @@ public class Question extends Activity{
 	 public void question(){
 
 		 if(this.q_Index < this.syutudai){
-
-
-			 //ハマリ　c.moveはオフセット現在地からの移動のためtoFirstで最初の地点へ戻す必要があった
-
+			 
 			 DBHelper dbh = new DBHelper(this);
 			 SQLiteDatabase db = dbh.getReadableDatabase();
 
-			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"question","answer","dummy1","dummy2","dummy3","image","mflg"}, null,null,null,null,null);
+			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"qflg"}, null,null,null,null,null);
 			 this.startManagingCursor(c);
-			 int clmIndex;
-
-			 Log.d("question",String.valueOf(this.q_Index));
+			 int clmIndex = c.getColumnIndex("qflg");
 			 boolean isEof = c.moveToFirst();
 			 if(isEof){
-				 //問題の取得
-
-				 c.move(this.order[this.q_Index]);
-				 Log.d("question",String.valueOf(this.order[this.q_Index]));
-
-				 TextView tv = (TextView)findViewById(R.id.quetions);
-
-				 //preppy
-				 this.mosaic = null;
-				 this.mosaic2 = null;
-				 this.mosaic3 = null;
-				 clmIndex = c.getColumnIndex("mflg");
-				 this.mflg = c.getInt(clmIndex);
-				 ImageView iv = (ImageView)this.findViewById(R.id.quetions2);
+				 c.move(this.order[q_Index]);
+				 this.qTyep = c.getInt(clmIndex);
+				 Log.d("aaa",String.valueOf(this.order[q_Index]));
+				 this.quizType.get(this.qTyep).getQuiz(this.order[q_Index]);
+				 //quiz.getQuiz(this.order[q_Index]);
 				 
-				 if(this.mflg==1){
-					 clmIndex = c.getColumnIndex("image");
-					 Resources r = getResources();
-					 //c.getString(clmIndex)
-					 //this.image = BitmapFactory.decodeResource(r, R.drawable.sample1);
-					 //this.dot = 15;
-					 //this.mosaic = mosaic_image(image,40);
-					 //this.mosaic2 = mosaic_image(image,30);
-					 //this.mosaic3 = mosaic_image(image,18);
-					 
-					 Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample1);
-					 bmp = Bitmap.createScaledBitmap(bmp, 160, 200, true);
-					 
-					 //this.mosaic = this.mosaic_image(bmp, 40);
-					 //this.mosaic2 = this.mosaic_image(bmp, 20);
-					 //this.mosaic3 = this.mosaic_image(bmp, 5);
-					 
-					 
-					 //Viewの表示
-					 iv.setVisibility(View.VISIBLE);
-				 }else{
-					 this.mflg = 0;
-					 
-					 //Viewの非表示
-					 iv.setVisibility(View.INVISIBLE);
-				 }
-				 //preppy
-				 clmIndex = c.getColumnIndex("question");
-
-				 //tv.setText(c.getString(clmIndex));
-				 this.mondai = c.getString(clmIndex);
-
-				 Integer[] select = this.randamSelect();
-				 clmIndex = c.getColumnIndex("answer");
-				 this.answer = c.getString(clmIndex);
-
-				 for(int i=0;i<select.length;i++){
-					 tv = (TextView)this.findViewById(this.getResources().getIdentifier("button"+select[i].toString(), "id", this.getPackageName()));
-					 tv.setText(c.getString(clmIndex));
-					 clmIndex = c.getColumnIndex("dummy"+String.valueOf(i+1));
-				 }
+				 
 			 }
+			 
 			 dbh.close();
-
+			 
 			 //startに現在時刻をセットし　Handlerを作動させ経過時間を表示させる
 			 this.start = System.currentTimeMillis();
 			 this.timerHandler.postDelayed(CallbackTimer, 100);
@@ -359,29 +322,12 @@ public class Question extends Activity{
 	//orderに出題番号を入れる　数字が被ると同じ問題が出てくる点に注意
 	public void setOrder(){
 		//配列に1～総問題数を入れる
-		for(int i=0;i<this.questions;i++){
+		for(int i=0;i<this.totalQuestion;i++){
 			this.order[i] = i;
 		}
-
-		for(int i=0;i<this.order.length;i++){
-			int dst = (int)Math.floor(Math.random()*(i+1));
-			this.swap(this.order,i,dst);
-		}
+		
+		RandomBox.random(this.order);
+		
 	}
 
-	public void swap(Integer[] box,int _i,int _dst){
-		int j = box[_i];
-		box[_i] = box[_dst];
-		box[_dst] = j;
-	}
-
-	public Integer[] randamSelect(){
-		Integer[] select = {1,2,3,4};
-
-		for(int i=0;i<select.length;i++){
-			int dst = (int)Math.floor(Math.random()*(i+1));
-			this.swap(select, i, dst);
-		}
-		return select;
-	}
 }

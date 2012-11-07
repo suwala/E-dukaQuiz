@@ -12,7 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 
-public class MainActivity extends Activity {
+public class TitleActivity extends Activity {
 
 
 	

@@ -31,7 +31,7 @@ public class Result extends Activity{
 
         
         TextView tv = (TextView)findViewById(R.id.textView1);
-        tv.setText(Question.point.toString()+"POINT獲得！\nあなたの正解数は"+Question.a_c.toString()+"問です！\n間違った回数は"+Question.miss.toString()+"問です");
+        tv.setText(OffLineQuizAcivity.point.toString()+"POINT獲得！\nあなたの正解数は"+OffLineQuizAcivity.a_c.toString()+"問です！\n間違った回数は"+OffLineQuizAcivity.miss.toString()+"問です");
         this.start = System.currentTimeMillis();
         this.timerHandler.postDelayed(CallbackTimer, 0);
         
@@ -65,7 +65,7 @@ public class Result extends Activity{
     };
 	
 	public void toTitle(View view){
-		Intent i=new Intent(this,MainActivity.class);
+		Intent i=new Intent(this,TitleActivity.class);
 		//遷移先のアクティビティが稼動済みの場合それより上にあるアクティビティをキルする
 		//要するに結果画面＞バックキー＞問題の画面に戻るのを防ぐ
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
