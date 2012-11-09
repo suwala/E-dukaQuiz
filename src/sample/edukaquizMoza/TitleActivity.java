@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 public class TitleActivity extends Activity {
 
-
+	static final String CALLBACK_URL = "http://twitter.com/";
+	static final String CONSUMER_ID = "CN1krVYeragTQdJYEm4BA";
+	static final String CONSUMER_SECRET = "1DESgiLUiUnvfMnoxO90XZPExIhiJt1cS5IAFbI1w";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {

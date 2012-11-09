@@ -43,7 +43,7 @@ public class OffLineQuizAcivity extends Activity{
     public int dot;
     public List<QuizManager> quizType =  new ArrayList<QuizManager>();
 
-    private int qTyep;
+    private int quizCode;
     private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
     private long start;
@@ -108,7 +108,7 @@ public class OffLineQuizAcivity extends Activity{
 			//0.1秒につき一文字表示
 			int length = (int)(System.currentTimeMillis()-start)/100;
 			
-			if(qTyep == 1){
+			if(quizCode == 1){
 				
 				
 				
@@ -181,46 +181,6 @@ public class OffLineQuizAcivity extends Activity{
 		this.deleteHandler.post(CallbackDelete);
 	}
     
-    
-    public Bitmap mosaic_image(Bitmap image, int dot){
-
-
-		Bitmap b = image.copy(Bitmap.Config.ARGB_8888, true);
-
-		//int dot = 8;
-
-		for (int i = 0; i < b.getWidth() / dot; i++) {
-			for (int j = 0; j < b.getHeight() / dot; j++) {
-				int color = image.getPixel(i, j);
-
-				// �h�b�g�̒��̕��ϒl���g��
-				int rr = 0;
-				int gg = 0;
-				int bb = 0;
-				for (int k = 0; k < dot; k++) {
-					for (int l = 0; l < dot; l++) {
-						int dotColor = image.getPixel(i * dot + k, j * dot + l);
-						rr += Color.red(dotColor);
-						gg += Color.green(dotColor);
-						bb += Color.blue(dotColor);
-					}
-				}
-				rr = rr / (dot * dot);
-				gg = gg / (dot * dot);
-				bb = bb / (dot * dot);
-
-				for (int k = 0; k < dot; k++) {
-					for (int l = 0; l < dot; l++) {
-						b.setPixel(i * dot + k, j * dot + l, Color.rgb(rr, gg, bb));
-					}
-				}
-			}
-		}
-
-		return b;
-    }
-
-
 	//order[現在の問題数]に基づいて問題を取得　答えのみanswerに格納
 	 public void question(){
 
@@ -229,15 +189,15 @@ public class OffLineQuizAcivity extends Activity{
 			 DBHelper dbh = new DBHelper(this);
 			 SQLiteDatabase db = dbh.getReadableDatabase();
 
-			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"qflg"}, null,null,null,null,null);
+			 Cursor c = db.query(DBHelper.getTableName(), new String[] {"quizcode"}, null,null,null,null,null);
 			 this.startManagingCursor(c);
-			 int clmIndex = c.getColumnIndex("qflg");
+			 int clmIndex = c.getColumnIndex("quizcode");
 			 boolean isEof = c.moveToFirst();
 			 if(isEof){
 				 c.move(this.order[q_Index]);
-				 this.qTyep = c.getInt(clmIndex);
+				 this.quizCode = c.getInt(clmIndex);
 				 Log.d("aaa",String.valueOf(this.order[q_Index]));
-				 this.quizType.get(this.qTyep).getQuiz(this.order[q_Index]);
+				 this.quizType.get(this.quizCode).getQuiz(this.order[q_Index]);
 				 //quiz.getQuiz(this.order[q_Index]);
 				 
 				 
@@ -251,7 +211,8 @@ public class OffLineQuizAcivity extends Activity{
 
 		 }else{
 
-			 Intent i = new Intent(this,Result.class);
+			 Intent i = new Intent(this,ResultActivity.class);
+			 i.putExtra("score", point);
 			 this.startActivity(i);
 
 			 this.finish();

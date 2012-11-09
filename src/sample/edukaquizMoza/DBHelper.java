@@ -30,20 +30,10 @@ public class DBHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		// TODO �����������ꂽ���\�b�h�E�X�^�u
 
-		//answerに答えをdummyに間違えを入れる　受け取った後シャッフルさせる　テーブル名どうしよう　クイズごとに分ける？
-		/*
+		
 		db.execSQL("create table "+tableName+" ("+
 				" question text not null,"+
-				" answer text not null,"+
-				" dummy1 text not null,"+
-				" dummy2 text not null,"+
-				" dummy3 text not null"+
-				");"
-			);
-		*/
-		db.execSQL("create table "+tableName+" ("+
-				" question text not null,"+
-				" qflg integer DEFAULT 0,"+
+				" quizcode integer not null,"+
 				" genre text not null,"+
 				" answer text not null,"+
 				" dummy1 text not null,"+
@@ -75,9 +65,9 @@ public class DBHelper extends SQLiteOpenHelper {
 	}
 
 	//sql文を返すメソッド
-	private String execsql(String question,int qflg,String genre,String answer,String dummy1,String dummy2,String dummy3,String image){
+	private String execsql(String question,int quizcode,String genre,String answer,String dummy1,String dummy2,String dummy3,String image){
 
-		return "insert into "+tableName+" (question,qflg,genre,answer,dummy1,dummy2,dummy3,image) values ('"+question+"','"+qflg+"','"+genre+"','"+answer+"','"+dummy1+"', '"+dummy2+"','"+dummy3+"','"+image+"');";
+		return "insert into "+tableName+" (question,quizcode,genre,answer,dummy1,dummy2,dummy3,image) values ('"+question+"','"+quizcode+"','"+genre+"','"+answer+"','"+dummy1+"', '"+dummy2+"','"+dummy3+"','"+image+"');";
 
 	}
 

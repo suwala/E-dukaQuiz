@@ -8,12 +8,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 
         android:textSize="20sp"/>
-    <Button
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/twitterBtn"
+        android:onClick="tweet" />
+
+    <Button
         android:id="@+id/button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:text="@string/return1" 
-        android:onClick="toTitle"/>
+        android:layout_gravity="center"
+        android:onClick="toTitle"
+        android:text="@string/return1" />
 
 </LinearLayout>

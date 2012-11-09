@@ -22,7 +22,8 @@
         </activity>
         <activity android:name="Menu"></activity>
         <activity android:name=".OffLineQuizAcivity"></activity>
-        <activity android:name="sample.edukaquizMoza.Result"></activity>
+        <activity android:name=".ResultActivity"></activity>
+        <activity android:name=".OAuthActivity"></activity>
     </application>
-
+<uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
