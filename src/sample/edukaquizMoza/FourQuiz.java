@@ -17,7 +17,7 @@ public class FourQuiz extends QuizManager{
 	@Override
 	public void setting(Cursor c) {
 		// TODO 自動生成されたメソッド・スタブ
-		ImageView iv = (ImageView)question.findViewById(R.id.mosaic);
+		ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
 		iv.setVisibility(View.INVISIBLE);		
 	}
 	

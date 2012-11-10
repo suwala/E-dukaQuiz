@@ -58,6 +58,9 @@ public class OffLineQuizAcivity extends Activity{
         setContentView(R.layout.question);
 
 
+        int resId = getResources().getIdentifier("sample1", "drawable", getPackageName());
+		Log.d("aaa",String.valueOf(resId));
+        
         QuizManager four = new FourQuiz(this);
         QuizManager mosaic = new MosaicQuiz(this);
         
@@ -84,7 +87,9 @@ public class OffLineQuizAcivity extends Activity{
         //出題順の決定
         this.setOrder();
         
-        //モザイク問題を先頭へthis.order[0] = 6;
+        
+        //モザイク問題を先頭へ
+        this.order[0] = 6;
 
         this.question();
 
@@ -108,19 +113,9 @@ public class OffLineQuizAcivity extends Activity{
 			//0.1秒につき一文字表示
 			int length = (int)(System.currentTimeMillis()-start)/100;
 			
-			if(quizCode == 1){
+			/*
+			if(Q == QuizCode.Mosaic){
 				
-				
-				
-				
-				/*
-				if(start < 10){--------------------------
-					mosaic = mosaic_image(bmp, 40);
-				}else if(length == 30000){
-					mosaic = mosaic_image(bmp, 20);
-				}else if(length == 60000){
-					mosaic = mosaic_image(bmp, 5);
-				}*/
 				
 				if(length % 10 == 1){
 					ImageView iv = (ImageView)findViewById(R.id.mosaic);
@@ -134,7 +129,7 @@ public class OffLineQuizAcivity extends Activity{
 				
 					iv.setImageBitmap(bmp);
 				}
-				/*
+				
 				if(length < 30){
 					//bmp = mosaic_image(bmp, 40);
 					bmp = mosaic;
@@ -149,9 +144,9 @@ public class OffLineQuizAcivity extends Activity{
 				
 				
 				iv.setImageBitmap(bmp);
-				*/
+				
 			}
-			
+			*/
 			
 
 			//0.1秒につき問題文を一文字表示する
@@ -197,9 +192,9 @@ public class OffLineQuizAcivity extends Activity{
 				 c.move(this.order[q_Index]);
 				 this.quizCode = c.getInt(clmIndex);
 				 Log.d("aaa",String.valueOf(this.order[q_Index]));
-				 this.quizType.get(this.quizCode).getQuiz(this.order[q_Index]);
-				 //quiz.getQuiz(this.order[q_Index]);
 				 
+				 //quizCodeによりクイズの種類を判別し　対応したインスタンスを実行
+				 this.quizType.get(this.quizCode).getQuiz(this.order[q_Index]);				 
 				 
 			 }
 			 

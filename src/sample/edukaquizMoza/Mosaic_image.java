@@ -11,6 +11,8 @@ public class Mosaic_image{
 
 		//int dot = 8;
 
+		dot = dot == 0?1:dot;
+		
 		for (int i = 0; i < b.getWidth() / dot; i++) {
 			for (int j = 0; j < b.getHeight() / dot; j++) {
 				int color = image.getPixel(i, j);

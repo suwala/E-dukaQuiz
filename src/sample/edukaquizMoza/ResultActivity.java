@@ -12,10 +12,14 @@ import twitter4j.conf.ConfigurationBuilder;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,7 +119,7 @@ public class ResultActivity extends Activity{
 				
 			} catch (TwitterException e) {
 				// TODO 自動生成された catch ブロック
-				Toast.makeText(this, e.toString(),Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "つぶやけませんでした",Toast.LENGTH_SHORT).show();
 				e.printStackTrace();
 			}
 		}
@@ -136,7 +140,6 @@ public class ResultActivity extends Activity{
         	// TODO 自動生成された catch ブロック
         	e.printStackTrace();
         }
-        Log.d("oauthTOken","null");
         Intent intent = new Intent(this,OAuthActivity.class);
         intent.putExtra("auth_url", requestToken.getAuthorizationURL());
         this.startActivityForResult(intent, 0);
@@ -146,7 +149,9 @@ public class ResultActivity extends Activity{
 	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		// TODO 自動生成されたメソッド・スタブ
 		super.onActivityResult(requestCode, resultCode, intent);
-		if(requestCode == 0){
+		
+		//intentがnullの場合もあるので注意！
+		if(requestCode == 0 && intent !=null){
     		Log.d("main","main");
     		try {
     			AccessToken accessToken = myOauth.getOAuthAccessToken(requestToken,intent.getExtras().getString("oauth_verifier"));
@@ -166,4 +171,35 @@ public class ResultActivity extends Activity{
     	}
 		
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO 自動生成されたメソッド・スタブ
+    	
+    	switch (item.getItemId()) {
+		case R.id.menu_settings:
+			this.clearPref();
+			break;
+    	}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO 自動生成されたメソッド・スタブ
+		
+		MenuInflater mi = getMenuInflater();
+		mi.inflate(R.menu.activity_main, menu);
+		
+		return super.onCreateOptionsMenu(menu);
+		
+	}
+	
+	public void clearPref(){
+    	
+    	SharedPreferences pref = getSharedPreferences("twitter", MODE_PRIVATE);
+    	Editor editor = pref.edit();
+    	editor.clear().commit();
+    	
+    }
 }
