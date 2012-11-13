@@ -2,6 +2,7 @@ package sample.edukaquizMoza;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 
 public class Mosaic_image{
 	
@@ -12,6 +13,8 @@ public class Mosaic_image{
 		//int dot = 8;
 
 		dot = dot == 0?1:dot;
+		
+		Log.d("dot",String.valueOf(b.getWidth())+":"+String.valueOf(b.getHeight()));
 		
 		for (int i = 0; i < b.getWidth() / dot+1; i++) {
 			for (int j = 0; j < b.getHeight() / dot+1; j++) {
@@ -28,8 +31,19 @@ public class Mosaic_image{
 						
 						if(j*dot+l >= b.getHeight())
 							break;
-										
-						int dotColor = image.getPixel(i * dot + k, j * dot + l);
+						
+						//int dotColor = image.getPixel(i *dot + k, j * dot + l);
+						int x =  i *dot+(int)(Math.random()*dot);
+						int y = j *dot +(int)(Math.random()*dot);
+						
+						if(x >= b.getWidth())
+							x = b.getWidth()-1;
+						if(y >= b.getHeight())
+							y = b.getHeight()-1;
+						
+						//Log.d("dot",String.valueOf(k)+":"+String.valueOf(l));
+						int dotColor = image.getPixel(x ,y);
+						//int dotColor = image.getPixel(i * dot + k, j * dot + l);
 						rr += Color.red(dotColor);
 						gg += Color.green(dotColor);
 						bb += Color.blue(dotColor);

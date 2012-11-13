@@ -8,11 +8,9 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-	static final Integer version = 1;
+	static final Integer version = 2;
 	static final CursorFactory factory = null;
 	static private String tableName = "selectionQ";
-	static final int FOUR =0;
-	static final int MOSAIC =1;
 	private Context context;
 	
 
@@ -34,6 +32,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
 		
 		db.execSQL("create table "+tableName+" ("+
+				"_id integer primary key autoincrement,"+
 				" question text not null,"+
 				" quizcode integer not null,"+
 				" genre text not null,"+
@@ -65,7 +64,8 @@ public class DBHelper extends SQLiteOpenHelper {
 		db.execSQL(execsql("1111×4444はイクツ？", QuizCode.FourSelected, QuizGenre.Learning, "4937284", "4937283", "4937282", "4937281", null));
 		db.execSQL(execsql("お札になった人物です", QuizCode.Mosaic, QuizGenre.History, "夏目漱石", "樋口一葉", "聖徳太子", "福沢諭吉", "souseki"));
 		db.execSQL(execsql("第92代内閣総理大臣です。", QuizCode.Mosaic, QuizGenre.History, "麻生太郎", "安倍晋三", "福田康夫", "小泉純一郎", "asou"));
-
+		
+		
 
 
 	}
@@ -73,6 +73,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO �����������ꂽ���\�b�h�E�X�^�u
+		
 
 	}
 

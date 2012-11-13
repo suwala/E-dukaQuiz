@@ -33,7 +33,7 @@ public class OffLineQuizAcivity extends Activity{
 
     public  Integer[] order;//DBのIndex準拠にした問題の出題順　総問題数をシャッフルする
 
-    static Integer a_c,miss,point; //正解数のカウント
+    static Integer a_c,miss; //正解数のカウント
     public String mondai;
     public int dot,count=4;
     public List<QuizManager> quizType =  new ArrayList<QuizManager>();
@@ -93,7 +93,7 @@ public class OffLineQuizAcivity extends Activity{
         ProgressBar pb = (ProgressBar)this.findViewById(R.id.progressBar1);
         pb.setMax(this.pbTime);
 
-        a_c = miss = point = 0;
+        a_c = miss = 0;
         
         
     }
@@ -170,7 +170,7 @@ public class OffLineQuizAcivity extends Activity{
 		// TODO 自動生成されたメソッド・スタブ
     	Log.d("main","STOP");
 		super.onStop();
-		this.deleteHandler.post(CallbackDelete);
+		//this.deleteHandler.post(CallbackDelete);
 		this.quizManager.close();
 		this.nextDelete.post(NextDelete);
 	}
@@ -234,8 +234,7 @@ public class OffLineQuizAcivity extends Activity{
 			this.quizManager.close();
 			
 			this.quizManager = new QuizJudge(this);
-			((QuizJudge)(this.quizManager)).judgement(view);
-			
+			((QuizJudge)(this.quizManager)).judgement(view);			
 			
 		}
 	}
@@ -247,8 +246,7 @@ public class OffLineQuizAcivity extends Activity{
 			this.order[i] = i;
 		}
 		
-		RandomBox.random(this.order);
-		
+		RandomBox.random(this.order);		
 	}
 
 }

@@ -37,8 +37,8 @@ public class QuizMosaic extends QuizManager {
 		int resId = r.getIdentifier(c.getString(clmIndex), "drawable", offLineActiviy.getPackageName());		
 		
 		this.image = BitmapFactory.decodeResource(r, resId);
-		this.image = Bitmap.createScaledBitmap(image, 160, 200, true);
-		this.dot = 40;
+		this.image = Bitmap.createScaledBitmap(image, 200, 250, true);
+		this.dot = 12;
 		timerHandler = new Handler();
 		this.timerHandler.postDelayed(CallbackTimer,0);
 		
@@ -46,18 +46,22 @@ public class QuizMosaic extends QuizManager {
 	
 	private Runnable CallbackTimer = new Runnable() {
 
+		private int i=0;
+		
 		public void run() {
 			// TODO 自動生成されたメソッド・スタブ
 			timerHandler.postDelayed(this, 500);
 
 			if(image != null){
 				Bitmap mosaic = Mosaic_image.mosaic_image(image, dot);
-				dot -= 2;
+				if(i%4 == 0)
+					dot -= 2;
 				ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
 				iv.setImageBitmap(mosaic);
 				if(dot == 0){
 					deleteHandler.post(CallbackDelete);
 				}
+				i++;
 			}
 		}
 	};

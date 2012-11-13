@@ -60,7 +60,7 @@ public class QuizJudge extends QuizManager {
 		//押したbtnのtextを取得しdbの答えと照合　合否で分岐
 		if(text.equals(answer)){
 
-			this.setTextType(tv,"正解！");
+			
 			btn = (Button)v;
 			btn.setText(R.string.maru);
 			btn.setTextColor(Color.RED);
@@ -73,7 +73,9 @@ public class QuizJudge extends QuizManager {
 			//正解時にも100P付与
 			point += getPoint+100;
 			
-			iv.setImageBitmap(this.getImagePoint(getPoint+100));
+			this.setTextType(tv,"正解！"+point+"ポイント獲得");
+			
+			//iv.setImageBitmap(this.getImagePoint(getPoint+100));
 			
 			answerCount++;
 		}else{
@@ -89,7 +91,7 @@ public class QuizJudge extends QuizManager {
 	
 	private void setTextType(TextView tv,String str){
 		
-		tv.setTextSize(70.0f);
+		tv.setTextSize(30.0f);
 		tv.setTextColor(Color.RED);
 		// 光源（x, y, z）の設定値。
         float[] direction = { 2.0f, 2.0f, 2.0f };
