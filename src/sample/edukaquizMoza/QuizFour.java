@@ -6,10 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 
-public class FourQuiz extends QuizManager{
+public class QuizFour extends QuizManager{
 
 	
-	public FourQuiz(OffLineQuizAcivity question) {
+	public QuizFour(OffLineQuizAcivity question) {
 		super(question);
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
@@ -19,6 +19,12 @@ public class FourQuiz extends QuizManager{
 		// TODO 自動生成されたメソッド・スタブ
 		ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
 		iv.setVisibility(View.INVISIBLE);		
+	}
+
+	@Override
+	void close() {
+		// TODO 自動生成されたメソッド・スタブ
+		
 	}
 	
 	

@@ -11,14 +11,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class MosaicQuiz extends QuizManager {
+public class QuizMosaic extends QuizManager {
 
+	
+	
 	private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
     private Bitmap image;
     private int dot;
 	
-	public MosaicQuiz(OffLineQuizAcivity question) {
+	public QuizMosaic(OffLineQuizAcivity question) {
 		super(question);
 		// TODO 自動生成されたコンストラクター・スタブ
 	}
@@ -32,12 +34,12 @@ public class MosaicQuiz extends QuizManager {
 		int clmIndex = c.getColumnIndex("image");
 		
 		Resources r= offLineActiviy.getResources();
-		int resId = r.getIdentifier(c.getString(clmIndex), "drawable", offLineActiviy.getPackageName());
-		Log.d("aaa",String.valueOf(resId));
+		int resId = r.getIdentifier(c.getString(clmIndex), "drawable", offLineActiviy.getPackageName());		
 		
-		image = BitmapFactory.decodeResource(r, resId);
+		this.image = BitmapFactory.decodeResource(r, resId);
 		this.image = Bitmap.createScaledBitmap(image, 160, 200, true);
 		this.dot = 40;
+		timerHandler = new Handler();
 		this.timerHandler.postDelayed(CallbackTimer,0);
 		
 	}
@@ -48,12 +50,14 @@ public class MosaicQuiz extends QuizManager {
 			// TODO 自動生成されたメソッド・スタブ
 			timerHandler.postDelayed(this, 500);
 
-			Bitmap mosaic = Mosaic_image.mosaic_image(image, dot);
-			dot -= 2;
-			ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
-			iv.setImageBitmap(mosaic);
-			if(dot == 0){
-				deleteHandler.post(CallbackDelete);
+			if(image != null){
+				Bitmap mosaic = Mosaic_image.mosaic_image(image, dot);
+				dot -= 2;
+				ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
+				iv.setImageBitmap(mosaic);
+				if(dot == 0){
+					deleteHandler.post(CallbackDelete);
+				}
 			}
 		}
 	};
@@ -64,5 +68,14 @@ public class MosaicQuiz extends QuizManager {
             timerHandler.removeCallbacks(CallbackTimer);
         }
     };
+
+	@Override
+	void close() {
+		// TODO 自動生成されたメソッド・スタブ
+		
+		Log.d("モザイク","停止処理");
+		this.deleteHandler.post(CallbackDelete);
+		this.image = null;
+	}
     
 }

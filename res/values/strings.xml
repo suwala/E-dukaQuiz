@@ -9,5 +9,6 @@
     <string name="a_count"></string>
     <string name="return1">タイトルへ戻る</string>
     <string name="twitterBtn">スコアをTwitterでつぶやく</string>
+    <string name="maru">○</string>
 
 </resources>

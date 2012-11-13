@@ -25,27 +25,25 @@ public class OffLineQuizAcivity extends Activity{
 
     
 
-	public boolean q = true;	//画面状態のフラグ　trueだと問題がfalseだと結果が表示されている
+	
     public Integer totalQuestion,q_Index=0;    //DBに登録されている総問題数のカウント　DBのメソッドで解決できる？ q_Index = 現在が難問目かの保持
 
 
     public final Integer syutudai = 3; //出題数
 
     public  Integer[] order;//DBのIndex準拠にした問題の出題順　総問題数をシャッフルする
-    public String answer;
 
     static Integer a_c,miss,point; //正解数のカウント
     public String mondai;
-    public Bitmap mosaic;
-    public Bitmap mosaic2;
-    public Bitmap mosaic3;
-    public Bitmap image;
-    public int dot;
+    public int dot,count=4;
     public List<QuizManager> quizType =  new ArrayList<QuizManager>();
-
+    public QuizManager quizManager;
+    
     private int quizCode;
     private Handler timerHandler = new Handler();
     private Handler deleteHandler = new Handler();
+    private Handler nextHandler = new Handler();
+    private Handler nextDelete = new Handler();
     private long start;
     private final int pbTime = 10000;//ProgressBarの設定タイム
 
@@ -57,15 +55,13 @@ public class OffLineQuizAcivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question);
 
-
-        int resId = getResources().getIdentifier("sample1", "drawable", getPackageName());
-		Log.d("aaa",String.valueOf(resId));
-        
-        QuizManager four = new FourQuiz(this);
-        QuizManager mosaic = new MosaicQuiz(this);
+        QuizManager four = new QuizFour(this);
+        QuizManager mosaic = new QuizMosaic(this);
         
         this.quizType.add(four);
         this.quizType.add(mosaic);
+        
+        QuizManager.resetResult();
         
         DBHelper dbh = new DBHelper(this);
         SQLiteDatabase db = dbh.getReadableDatabase();
@@ -89,7 +85,7 @@ public class OffLineQuizAcivity extends Activity{
         
         
         //モザイク問題を先頭へ
-        this.order[0] = 6;
+        this.order[0] = 6;this.order[1] = 16;
 
         this.question();
 
@@ -105,60 +101,28 @@ public class OffLineQuizAcivity extends Activity{
 	private Runnable CallbackTimer = new Runnable() {
 
 		public void run() {
+			
 			// TODO 自動生成されたメソッド・スタブ
 			timerHandler.postDelayed(this, 10);
 
 			TextView tv = (TextView)findViewById(R.id.quetion);
+			tv.setTextSize(16);
+			tv.setTextColor(Color.BLACK);
 
 			//0.1秒につき一文字表示
 			int length = (int)(System.currentTimeMillis()-start)/100;
-			
-			/*
-			if(Q == QuizCode.Mosaic){
-				
-				
-				if(length % 10 == 1){
-					ImageView iv = (ImageView)findViewById(R.id.mosaic);
-					Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.sample1);
-					bmp = Bitmap.createScaledBitmap(bmp, 160, 200, true);
-				
-					int dot = (100-length)/2;
-					if(dot != 0){
-						bmp = Mosaic_image.mosaic_image(bmp, (100-length)/2);//mosaic_image(bmp, (100-length)/2);
-					}
-				
-					iv.setImageBitmap(bmp);
-				}
-				
-				if(length < 30){
-					//bmp = mosaic_image(bmp, 40);
-					bmp = mosaic;
-					
-				}else if(length < 60){
-					//bmp = mosaic_image(bmp, 20);
-					bmp = mosaic2;
-				}else{
-					//bmp = mosaic_image(bmp, 5);
-					bmp = mosaic3;
-				}
-				
-				
-				iv.setImageBitmap(bmp);
-				
-			}
-			*/
-			
+						
 
 			//0.1秒につき問題文を一文字表示する
 			if(length > mondai.length())
 				length = mondai.length();
 			tv.setText(mondai.subSequence(0, length));
 
-
-
-
 			ProgressBar pb = (ProgressBar)findViewById(R.id.progressBar1);
 			pb.setProgress((int)(System.currentTimeMillis()-start));
+			if((int)(System.currentTimeMillis()-start) > 10000){
+				deleteHandler.post(CallbackDelete);
+			}
 		}
 	};
 
@@ -168,12 +132,47 @@ public class OffLineQuizAcivity extends Activity{
             timerHandler.removeCallbacks(CallbackTimer);
         }
     };
+    
+    private Runnable NextTimer = new Runnable(){
+    	
+		@Override
+		public synchronized void run() {
+			// TODO 自動生成されたメソッド・スタブ
+			
+			TextView tv = (TextView)findViewById(R.id.count);
+			if(count == 0){
+				tv.setText("");
+				q_Index++;
+				question();
+				deleteHandler.post(NextDelete);
+				count = 4;
+			}else{
+
+				tv.setText("Next To"+(count-1));
+				count--;
+			}
+			
+			nextHandler.postDelayed(NextTimer, 1500/4);
+			
+		}
+    	
+    };
+    
+    private Runnable NextDelete = new Runnable() {
+        public void run() {
+            /* コールバックを削除して周期処理を停止 */
+            nextHandler.removeCallbacks(NextTimer);
+        }
+    };
 
     @Override
 	protected void onStop() {
 		// TODO 自動生成されたメソッド・スタブ
+    	Log.d("main","STOP");
 		super.onStop();
 		this.deleteHandler.post(CallbackDelete);
+		this.quizManager.close();
+		this.nextDelete.post(NextDelete);
 	}
     
 	//order[現在の問題数]に基づいて問題を取得　答えのみanswerに格納
@@ -191,25 +190,23 @@ public class OffLineQuizAcivity extends Activity{
 			 if(isEof){
 				 c.move(this.order[q_Index]);
 				 this.quizCode = c.getInt(clmIndex);
-				 Log.d("aaa",String.valueOf(this.order[q_Index]));
 				 
 				 //quizCodeによりクイズの種類を判別し　対応したインスタンスを実行
-				 this.quizType.get(this.quizCode).getQuiz(this.order[q_Index]);				 
+				 this.quizManager = this.quizType.get(this.quizCode);
+				 this.quizManager.getQuiz(this.order[q_Index]);
 				 
 			 }
 			 
 			 dbh.close();
 			 
 			 //startに現在時刻をセットし　Handlerを作動させ経過時間を表示させる
-			 this.start = System.currentTimeMillis();
 			 this.timerHandler.postDelayed(CallbackTimer, 100);
+			 this.start= System.currentTimeMillis();
 
 		 }else{
 
 			 Intent i = new Intent(this,ResultActivity.class);
-			 i.putExtra("score", point);
 			 this.startActivity(i);
-
 			 this.finish();
 		 }
 
@@ -217,61 +214,29 @@ public class OffLineQuizAcivity extends Activity{
 
 	public void answer(View view){
 
-
-		//qがtrueの時は問題、falseの時は回答が表示されてる　ということにしよう
-		//問題表示の時は回答の消去　回答表示の時は問題の表示の2分岐
-
-
-		if(q){
-			//経過時間のストップ
-			this.deleteHandler.postDelayed(CallbackDelete, 0);
-			Button btn = (Button)view;
-
-			//押したbtnのtextを取得しdbの答えと照合　合否で分岐
-			if(btn.getText().toString().equals(this.answer)){
-
-				btn = (Button) findViewById(R.id.button1);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button2);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button3);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button4);
-				btn.setText("");
-
-				btn = (Button)view;
-
-				btn.setText("正解！");
-
-				//1秒で正解だと9000P 5秒で正解だと5000Pが入る計算　マイナスは切り上げて0にする
-				if(10000-(int)(System.currentTimeMillis() - this.start) > 0)
-					point += 10000-(int)(System.currentTimeMillis() - this.start);
-
-				a_c++;
-				q=false;
-			}else{
-				//選択肢を消去
-				btn = (Button) findViewById(R.id.button1);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button2);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button3);
-				btn.setText("");
-				btn = (Button) findViewById(R.id.button4);
-				btn.setText("");
-
-
-				btn = (Button)view;
-
-				btn.setText("残念！");
-
-				miss++;
-				q=false;
-			}
-		}else{
-			this.q_Index++;
-			this.question();
-			this.q=true;
+		//quizManagerにQuizJudgeが入ってる時にタッチ＝次の問題へ
+		if(this.quizManager instanceof QuizJudge){
+			/*
+			this.count = 4;
+			this.nextDelete.post(NextDelete);
+			TextView tv = (TextView)this.findViewById(R.id.count);
+			tv.setText("");
+			q_Index++;
+			question();
+			*/
+			
+			
+		//問題が入っている = QuizAnsweを入れ判定する
+		}else if(view != findViewById(R.id.mainLayout)){
+			Log.d("aaa","終了");
+			this.nextHandler.post(NextTimer);
+			this.deleteHandler.post(CallbackDelete);
+			this.quizManager.close();
+			
+			this.quizManager = new QuizJudge(this);
+			((QuizJudge)(this.quizManager)).judgement(view);
+			
+			
 		}
 	}
 
