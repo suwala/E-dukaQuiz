@@ -98,6 +98,24 @@ public class OffLineQuizAcivity extends Activity{
         
     }
 
+	@Override
+	protected void onResume() {
+		// TODO 自動生成されたメソッド・スタブ
+		super.onResume();
+		
+		
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO 自動生成されたメソッド・スタブ
+    	Log.d("main","STOP");
+		super.onStop();
+		//this.deleteHandler.post(CallbackDelete);
+		this.quizManager.close();
+		//this.nextDelete.post(NextDelete);
+	}
+	
 	private Runnable CallbackTimer = new Runnable() {
 
 		public void run() {
@@ -122,6 +140,7 @@ public class OffLineQuizAcivity extends Activity{
 			pb.setProgress((int)(System.currentTimeMillis()-start));
 			if((int)(System.currentTimeMillis()-start) > 10000){
 				deleteHandler.post(CallbackDelete);
+				Log.d("handler","KILL");
 			}
 		}
 	};
@@ -165,15 +184,7 @@ public class OffLineQuizAcivity extends Activity{
         }
     };
 
-    @Override
-	protected void onStop() {
-		// TODO 自動生成されたメソッド・スタブ
-    	Log.d("main","STOP");
-		super.onStop();
-		//this.deleteHandler.post(CallbackDelete);
-		this.quizManager.close();
-		this.nextDelete.post(NextDelete);
-	}
+    
     
 	//order[現在の問題数]に基づいて問題を取得　答えのみanswerに格納
 	 public void question(){

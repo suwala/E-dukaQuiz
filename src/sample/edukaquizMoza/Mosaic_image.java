@@ -18,7 +18,6 @@ public class Mosaic_image{
 		
 		for (int i = 0; i < b.getWidth() / dot+1; i++) {
 			for (int j = 0; j < b.getHeight() / dot+1; j++) {
-				int color = image.getPixel(i, j);
 
 				// �h�b�g�̒��̕��ϒl���g��
 				int rr = 0;
@@ -62,7 +61,6 @@ public class Mosaic_image{
 							break;
 						b.setPixel(i * dot + k, j * dot + l, Color.rgb(rr, gg, bb));
 					}
-						
 				}
 			}
 		}
