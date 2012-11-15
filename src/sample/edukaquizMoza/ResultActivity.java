@@ -31,7 +31,7 @@ public class ResultActivity extends Activity{
 	public static OAuthAuthorization myOauth;
 	public static RequestToken requestToken;
 	private long start;
-	private final String tweet = "クイズアプリで"+QuizManager.getPoint()+"ポイントを獲得！"+" #ictTestQuiz";
+	private final String tweet = "クイズアプリで"+Quiz.getPoint()+"ポイントを獲得！"+" #ictTestQuiz";
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class ResultActivity extends Activity{
 
        
         TextView tv = (TextView)findViewById(R.id.textView1);
-        tv.setText(QuizManager.getPoint()+"POINT獲得！\nあなたの正解数は"+QuizManager.getAnswer()+"問です！");
+        tv.setText(Quiz.getPoint()+"POINT獲得！\nあなたの正解数は"+Quiz.getAnswerCount()+"問です！");
         this.start = System.currentTimeMillis();
         this.timerHandler.postDelayed(CallbackTimer, 0);
         

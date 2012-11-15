@@ -1,8 +1,8 @@
 package sample.edukaquizMoza;
 
-public class RandomBox {
+public class BoxShuffle {
 	
-	public static void random(Integer[] box){
+	public static void shuffle(Integer[] box){
 		for(int i=0;i<box.length;i++){
 			int dst = (int)Math.floor(Math.random()*(i+1));
 			int j = box[i];
@@ -11,7 +11,7 @@ public class RandomBox {
 		}
 	}
 	
-	public static void random(int[] box){
+	public static void shuffle(int[] box){
 		for(int i=0;i<box.length;i++){
 			int dst = (int)Math.floor(Math.random()*(i+1));
 			int j = box[i];
@@ -20,7 +20,7 @@ public class RandomBox {
 		}
 	}
 	
-	private RandomBox(){
+	private BoxShuffle(){
 		
 	}
 

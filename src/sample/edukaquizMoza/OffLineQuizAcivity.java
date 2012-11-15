@@ -36,8 +36,8 @@ public class OffLineQuizAcivity extends Activity{
     static Integer a_c,miss; //正解数のカウント
     public String mondai;
     public int dot,count=4;
-    public List<QuizManager> quizType =  new ArrayList<QuizManager>();
-    public QuizManager quizManager;
+    public List<Quiz> quizType =  new ArrayList<Quiz>();
+    public Quiz quizManager;
     
     private int quizCode;
     private Handler timerHandler = new Handler();
@@ -55,13 +55,13 @@ public class OffLineQuizAcivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.question);
 
-        QuizManager four = new QuizFour(this);
-        QuizManager mosaic = new QuizMosaic(this);
+        Quiz four = new QuizFour(this);
+        Quiz mosaic = new QuizMosaic(this);
         
         this.quizType.add(four);
         this.quizType.add(mosaic);
         
-        QuizManager.resetResult();
+        Quiz.resetResult();
         
         DBHelper dbh = new DBHelper(this);
         SQLiteDatabase db = dbh.getReadableDatabase();
@@ -193,7 +193,7 @@ public class OffLineQuizAcivity extends Activity{
 				 
 				 //quizCodeによりクイズの種類を判別し　対応したインスタンスを実行
 				 this.quizManager = this.quizType.get(this.quizCode);
-				 this.quizManager.getQuiz(this.order[q_Index]);
+				 this.quizManager.loadQuiz(this.order[q_Index]);
 				 
 			 }
 			 
@@ -246,7 +246,7 @@ public class OffLineQuizAcivity extends Activity{
 			this.order[i] = i;
 		}
 		
-		RandomBox.random(this.order);		
+		BoxShuffle.shuffle(this.order);		
 	}
 
 }

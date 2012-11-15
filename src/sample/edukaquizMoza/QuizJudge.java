@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class QuizJudge extends QuizManager {
+public class QuizJudge extends Quiz {
 
 	
 	//Numberは20*340なので20*34サイズで10個に切り分けてね

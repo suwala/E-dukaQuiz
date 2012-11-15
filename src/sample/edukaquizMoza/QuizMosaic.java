@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class QuizMosaic extends QuizManager {
+public class QuizMosaic extends Quiz {
 
 	
 	

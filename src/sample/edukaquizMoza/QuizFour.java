@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 
-public class QuizFour extends QuizManager{
+public class QuizFour extends Quiz{
 
 	
 	public QuizFour(OffLineQuizAcivity question) {
