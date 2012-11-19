@@ -53,7 +53,7 @@ public class TitleActivity extends Activity {
 		
 				
 		//�W�������I��(menu)������
-		Intent i = new Intent(this,sample.edukaquizMoza.Menu.class);
+		Intent i = new Intent(this,sample.edukaquizMoza.SelectMenuActivity.class);
 		
 		//Intent i = new Intent(this,Question.class);
 		

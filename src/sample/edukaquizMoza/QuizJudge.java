@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.EmbossMaskFilter;
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.MaskFilterSpan;
@@ -17,15 +18,12 @@ import android.widget.TextView;
 
 public class QuizJudge extends Quiz {
 
-	
+
 	//Numberは20*340なので20*34サイズで10個に切り分けてね
-	public QuizJudge(OffLineQuizAcivity question) {
-		super(question);
-		// TODO 自動生成されたコンストラクター・スタブ
-	}
+	
 
 	@Override
-	void setting(Cursor c) {
+	void start() {
 		// TODO 自動生成されたメソッド・スタブ
 
 	}
@@ -42,17 +40,17 @@ public class QuizJudge extends Quiz {
 		Button btn=(Button)v;
 		String text = btn.getText().toString();
 		
-		btn = (Button) offLineActiviy.findViewById(R.id.button1);
+		btn = (Button) activity.findViewById(R.id.button1);
 		btn.setText("");
-		btn = (Button) offLineActiviy.findViewById(R.id.button2);
+		btn = (Button) activity.findViewById(R.id.button2);
 		btn.setText("");
-		btn = (Button) offLineActiviy.findViewById(R.id.button3);
+		btn = (Button) activity.findViewById(R.id.button3);
 		btn.setText("");
-		btn = (Button) offLineActiviy.findViewById(R.id.button4);
+		btn = (Button) activity.findViewById(R.id.button4);
 		btn.setText("");
 		
-		TextView tv = (TextView)offLineActiviy.findViewById(R.id.quetion);
-		ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.image_point);
+		TextView tv = (TextView)activity.findViewById(R.id.quetion);
+		ImageView iv = (ImageView)activity.findViewById(R.id.image_point);
 		
 		
 		
@@ -127,10 +125,23 @@ public class QuizJudge extends Quiz {
 		Log.d("桁数は",String.valueOf(point)+"の桁数は"+String.valueOf(digits));
 		
 		//上の桁数から調べ　1=340-34 2=340-34*2 340-(数値*34)から34pixcel 20*34に治まる形に成型
-		Bitmap plus = BitmapFactory.decodeResource(offLineActiviy.getResources(), R.drawable.plus);
+		Bitmap plus = BitmapFactory.decodeResource(activity.getResources(), R.drawable.plus);
 		plus = Bitmap.createBitmap(plus, 15, 15, 30, 30);
 		plus = Bitmap.createScaledBitmap(plus, 200, 200, false);
 		return plus;
+		
+	}
+
+	@Override
+	void stop() {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+
+	@Override
+	void individualSetup() {
+		// TODO 自動生成されたメソッド・スタブ
 		
 	}
 }

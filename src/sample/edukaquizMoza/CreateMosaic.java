@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
-public class Mosaic_image{
+public class CreateMosaic{
 	
 	public static Bitmap mosaic_image(Bitmap image, int dot){
 		
@@ -13,8 +13,6 @@ public class Mosaic_image{
 		//int dot = 8;
 
 		dot = dot == 0?1:dot;
-		
-		Log.d("dot",String.valueOf(b.getWidth())+":"+String.valueOf(b.getHeight()));
 		
 		for (int i = 0; i < b.getWidth() / dot+1; i++) {
 			for (int j = 0; j < b.getHeight() / dot+1; j++) {

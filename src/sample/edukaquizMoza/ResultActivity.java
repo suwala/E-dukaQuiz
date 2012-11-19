@@ -81,11 +81,11 @@ public class ResultActivity extends Activity{
         }
     };
 	
-	public void toTitle(View view){
-		Intent i=new Intent(this,TitleActivity.class);
+	public void toSelectMenu(View view){
+		Intent i=new Intent(this,SelectMenuActivity.class);
 		//遷移先のアクティビティが稼動済みの場合それより上にあるアクティビティをキルする
-		//要するに結果画面＞バックキー＞問題の画面に戻るのを防ぐ
-		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		//要するに結果画面＞バックキー＞問題の画面に戻るのを防ぐ　finish()してるのでいらなそう
+		//i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		//良くワカラン調べることi.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		this.startActivity(i);
 		this.deleteHandler.postDelayed(CallbackDelete, 0);

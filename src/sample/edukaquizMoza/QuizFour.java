@@ -8,21 +8,33 @@ import android.widget.ImageView;
 
 public class QuizFour extends Quiz{
 
-	
-	public QuizFour(OffLineQuizAcivity question) {
-		super(question);
+	public QuizFour() {
 		// TODO 自動生成されたコンストラクター・スタブ
+		super();
 	}
+	
 
 	@Override
-	public void setting(Cursor c) {
+	public void start() {
 		// TODO 自動生成されたメソッド・スタブ
-		ImageView iv = (ImageView)offLineActiviy.findViewById(R.id.mosaic);
-		iv.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
 	void close() {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+
+	@Override
+	void stop() {
+		// TODO 自動生成されたメソッド・スタブ
+		
+	}
+
+
+	@Override
+	void individualSetup() {
 		// TODO 自動生成されたメソッド・スタブ
 		
 	}

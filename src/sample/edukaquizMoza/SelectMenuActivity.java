@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Menu extends Activity{
+public class SelectMenuActivity extends Activity{
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public class Menu extends Activity{
     }
 	
 	public void qesS(View view){
-		Intent i = new Intent(this,OffLineQuizAcivity.class);
+		Intent i = new Intent(this,OffLineQuizActivity.class);
 		this.startActivityForResult(i,0);
 	}
 
